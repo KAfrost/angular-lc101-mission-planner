@@ -1,6 +1,36 @@
-<h3>Crew</h3>
+h3>Crew</h3>
 <ul>
-  <li>Jessica Watkins</li>
-  <li>Raja Chari</li>
-  <li>Jasmin Moghbeli</li>
+  <!-- for loop to iterate across the crew object array
+      "member" is the variable chosen to represent each of the objects inside of that array -->
+  <li *ngFor="let member of crew">
+      <!-- if the object assigned to the memberBeingEdited is not the same as the current member object the loop is looking at render the code below
+      else (if it IS the member that's being edited) enter the "elseBlock" below -->
+      <span *ngIf="memberBeingEdited !== member; else elseBlock">
+          <!-- when the member object's name is clicked, pass the current member object to the edit method -->
+          <span (click)="edit(member)" class="editable-text">{{member.name}}</span>
+          <!-- if the member objects firstMission property is true, display this block -->
+          <span *ngIf="member.firstMission">
+            - 1st
+          </span>
+          <button (click)="remove(member)">remove</button>
+      </span>
+      
+      <!-- else block that gets executed if the condition from 8 is not met -->
+      <ng-template #elseBlock>
+          <!-- #updatedName is the template variable (hence why we use updatedName.value) - this NEEDS the #
+            When enter is pressed the save method is called with the template variable's value passed as the argument, along with the member object
+            this value section is the alternate syntax from value = {{ member.name }}  -->
+          <input #updatedName (keyup.enter)="save(updatedName.value, member)" [value]="member.name"/>
+          <!-- clicking the save button will call the method as well -->
+          <button (click)="save(updatedName.value, member)">save</button>
+      </ng-template>
+
+    </li>
 </ul>
+<!-- #name is the template variable for the text box -->
+<input #name type="text"/>
+<!-- #firstMission is the template variable for the checkbox -->
+<label>First mission<input #firstMission type="checkbox"/></label>
+<!-- when the button is clicked call the add method passing the value from the #name textbox and the boolean for if the #firstMission is checked
+ name.value = '' resets the textbox to empty after it's been clicked-->
+<button (click)="add(name.value, firstMission.checked); name.value = ''">Add</button>
