@@ -2,7 +2,15 @@
     <h3>Equipment</h3>
     <ol>
         <li *ngFor="let item of equipmentItems">
-            <!-- "Add to Cargo Hold" button goes here. -->
+            <!-- apply class styling for active IF item mass plus current cargoMass value are <= the maxiumumAllowedMass(2000) 
+                AND the length of the current cargoHold array is less than the maxItems(10)
+                styling is disabled if this item's mass + the current cargoMass is >  the maximumAllowedMass(2000) OR the cargoHold.length is >= the maxItems(10)
+
+                When the button is clicked create a variable to hold the true/false that is returned  from the addItem method call where the item is passed as the argument to the method. 
+             -->
+            <button [class.active]="item.mass+cargoMass<=maximumAllowedMass && cargoHold.length < maxItems" [disabled]="item.mass+cargoMass>maximumAllowedMass || cargoHold.length >= maxItems" (click)="nearCapacity = addItem(item)">
+                Add to Cargo Hold
+            </button>
             {{item.name}}, {{item.mass}} kg
         </li>
     </ol>
@@ -16,7 +24,9 @@
         <li *ngFor="let equipment of cargoHold">{{equipment.name}}</li>
     </ol>
     <p>Mass in Hold: {{cargoMass}} kg</p>
-    <p>Mass Budget Remaining: {{<!-- Calculate mass remaining here. -->}} kg</p>
-    <!-- Add the "Empty Hold" button here. -->
+    <!-- apply the class styling for nearMassMax if the nearCapacity value that we declared above with the button click is true -->
+    <p [class.nearMaxMass]="nearCapacity">Mass Budget Remaining: {{maximumAllowedMass - cargoMass}} kg</p>
+    <!-- on button click assign the cargoHold to an empty array, reset the cargoMass to 0, and the nearCapacity to 'false'  -->
+    <button (click)="cargoHold=[]; cargoMass=0; nearCapacity = false">Empty Hold</button>
 </div>
 
